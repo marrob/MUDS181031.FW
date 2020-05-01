@@ -73,7 +73,7 @@ typedef struct _AppTypeDef
   int Counter;
   StateTypeDef States;
   Iso15765Handle_Type   Transport;
-}AppTypeDef;
+}DeviceTypeDef;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -92,7 +92,7 @@ CAN_HandleTypeDef hcan1;
 /* USER CODE BEGIN PV */
 LiveLED_HnadleTypeDef LiveLed;
 DebugStateTypeDef DebugState;
-AppTypeDef App;
+DeviceTypeDef Device;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -117,7 +117,7 @@ void TestMsgSenderTask(void)
   static int32_t timestamp;
   if(HAL_GetTick() - timestamp >= 1000)
   {
-    App.Counter ++;
+    Device.Counter ++;
     CAN_TxHeaderTypeDef   txHeader;
     uint32_t              txMailbox;
     timestamp = HAL_GetTick();
@@ -150,7 +150,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
   }
   if ((rxHeader.ExtId == UDS_RX_ADDR) && (rxHeader.IDE == CAN_ID_EXT) && (rxHeader.DLC == 8))
   {
-    Iso15765IncomingStream(&App.Transport, data, sizeof(data));
+    Iso15765IncomingStream(&Device.Transport, data, sizeof(data));
   }
     /*...*/
 }
@@ -341,9 +341,9 @@ int main(void)
   LiveLedInit(&LiveLed);
 
   /*** Counter ***/
-  App.Counter = 0;
+  Device.Counter = 0;
 
-  Iso15765ServerInit(&App.Transport, 0, 30);
+  Iso15765ServerInit(&Device.Transport, 0, 30);
 
   /* USER CODE END 2 */
  
@@ -356,7 +356,7 @@ int main(void)
     LiveLedTask(&LiveLed);
     DebugTask(&DebugState);
     TestMsgSenderTask();
-    Iso15765Task(&App.Transport);
+    Iso15765Task(&Device.Transport);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
