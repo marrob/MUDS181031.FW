@@ -184,11 +184,12 @@ uint8_t Iso15765ReqRespCallback(Iso15765Handle_Type *hnd, uint8_t *data, size_t 
   #define UDS_SID_DIAG_CTRL   0x10 /*DiagSesssionControl*/
   #define UDS_SID_CLEAR_DTC   0x14 /*ClearDiagnosticInformation*/
   #define UDS_SID_DTC_READ    0x19 /*ReadDTCInformationService*/
-  #define UDS_SID_DID         0x22 /*ReadDtaByIdentifier*/
+  #define UDS_SID_RDBI        0x22 /*ReadDtaByIdentifier*/
+  #define UDS_SID_WDBI        0x2E /*WriteDataByIdentifier*/
   #define UDS_SID_RUTINE_CTRL 0x31 /*RutineControl*/
 
-  uint8_t sid = data[0];
 
+  uint8_t sid = data[0];
   #define DID_TEST    0x0001
 
   switch(sid)
@@ -227,9 +228,9 @@ uint8_t Iso15765ReqRespCallback(Iso15765Handle_Type *hnd, uint8_t *data, size_t 
       break;
     }
     /*** ReadDtaByIdentifier ***/
-    case UDS_SID_DID:
+    case UDS_SID_RDBI:
     {
-      DeviceDbgLog("UDS_SID_DID, Reqtuest Length %d", size);
+      DeviceDbgLog("UDS_SID_RDBI, Reqtuest Length %d", size);
       uint8_t did_msb = data[1];
       uint8_t did_lsb = data[2];
       uint16_t did =  did_msb << 8 | did_lsb;
@@ -239,16 +240,43 @@ uint8_t Iso15765ReqRespCallback(Iso15765Handle_Type *hnd, uint8_t *data, size_t 
         {
           uint8_t msbValue = 0x00;
           uint8_t lsbValue = 0x10;
-          uint8_t temp[] = {UDS_SID_DID + 0x40, data[1], data[2], msbValue, lsbValue};
+          uint8_t temp[] = {UDS_SID_RDBI + 0x40, data[1], data[2], msbValue, lsbValue};
           Iso15765Response(hnd, temp, sizeof(temp));
           break;
         }
-        default:
-        {
-          Iso15765NegativeResponse(hnd, sid, ISO15765_NRC_CONDITIONS_NOT_CORRECT);
-        }
+       // default:
+       // {
+       //   Iso15765NegativeResponse(hnd, sid, ISO15765_NRC_CONDITIONS_NOT_CORRECT);
+       // }
+
         break;
       }
+      data[0] = UDS_SID_RDBI + 0x40;
+      Iso15765Response(hnd, data, size);
+      break;
+    }
+    /*** WriteDataByIdentifier ***/
+    case UDS_SID_WDBI:
+    {
+      uint8_t did_msb = data[1];
+      uint8_t did_lsb = data[2];
+      uint16_t did =  did_msb << 8 | did_lsb;
+      DeviceDbgLog("UDS_SID_RDBI, Reqtuest Length %d", size);
+      switch(did)
+      {
+        /*MASTER 2 */
+        case 0x9281:
+        {
+          break;
+        }
+
+      }
+      //default:
+      //{
+      //  Iso15765NegativeResponse(hnd, sid, ISO15765_NRC_CONDITIONS_NOT_CORRECT);
+      //}
+      data[0] = UDS_SID_WDBI + 0x40;
+      Iso15765Response(hnd, data, size);
       break;
     }
     /*** RutineControl ***/

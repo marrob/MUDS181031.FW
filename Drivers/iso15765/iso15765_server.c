@@ -5,6 +5,9 @@
 * Description        : Iso1576 Network Layer
 ********************************************************************************
 - Update 200224_1716: tick.h függőség csere, mostantól a HAL-tól függ közvetlenül
+- Update 200917_1301: Meg akartam csinálni a Master2-höz hogy két független
+  UDS cimet is tudjon kezelni, de annyira nem egyértelmű, mert lényegében két
+  teljesn különálló UDS-be kell pakolni
 ********************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/

@@ -108,15 +108,16 @@ typedef enum  _Iso15765State2_Type
     
 }Iso15765State_Type;
 
+typedef struct {
+
+  uint32_t RxAddress;
+  uint32_t TxAddress;
+}Iso15765Channel_Type;
+
 typedef struct _Iso15765Handle_Type
 {
-//    struct
-//    {
-//        uint8_t RetryCount;
-//        uint8_t SeperationTime;
-//        uint8_t BlockSize;
-//    }Paramteres;
-    
+
+    Iso15765Channel_Type *Channels;
     Iso15765Var_Type    Request;
     Iso15765Var_Type    Response;
     uint8_t             LastNegativeResponseCode;
@@ -146,6 +147,8 @@ typedef struct _Iso15765Handle_Type
     }Diag;
     
 }Iso15765Handle_Type;
+
+
 
 /* Exported functions --------------------------------------------------------*/
 extern uint32_t HAL_GetTick(void);
