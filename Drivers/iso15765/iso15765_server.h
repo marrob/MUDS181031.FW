@@ -161,14 +161,11 @@ uint8_t Iso15765Task(Iso15765Handle_Type *hnd);
 __weak uint8_t Iso15765BusReadCallback(Iso15765Handle_Type *hnd, uint8_t *data, size_t size);
 __weak uint8_t Iso15765FlushCallback(Iso15765Handle_Type *hnd);
 
-
 __weak uint8_t Iso15765ReqRespCallback(Iso15765Handle_Type *hnd, uint8_t *data, size_t size);
-
 __weak uint8_t Iso15765BusWriteCallback(Iso15765Handle_Type *hnd, uint8_t *data, size_t size);
 
 uint8_t Iso15765IncomingStream(Iso15765Handle_Type *hnd, uint8_t *data, size_t size);
 uint8_t Iso15765Response(Iso15765Handle_Type *hnd, uint8_t *data, size_t size);
-uint8_t Iso15765PositiveResponse(Iso15765Handle_Type *hnd, uint8_t sid);
 uint8_t Iso15765NegativeResponse(Iso15765Handle_Type *hnd, uint8_t sid, uint8_t nrc);
 
 

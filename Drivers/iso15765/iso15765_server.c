@@ -78,6 +78,7 @@ uint8_t Iso15765Task(Iso15765Handle_Type *hnd)
         memset(hnd->Response.Data,ISO15765_DEFAULT_FILL, ISO15765_BUFFER_SIZE);
         hnd->Request.Offset = 0;
         hnd->Request.Size = 0;
+        hnd->Request.FrameCnt = 0;
       }
 
       if(hnd->Rx.Ready)
@@ -142,7 +143,6 @@ uint8_t Iso15765Task(Iso15765Handle_Type *hnd)
       hnd->State.Next = ST_ISO15765_RX_CONSECUTIVE;
       Iso15765UsrLog("ST_ISO15765_TX_FLOWCTRL -> ST_ISO15765_RX_CONSECUTIVE...");
       hnd->Request.BlockCnt = 0;
-      hnd->Request.FrameCnt = 0;
       break;
     }
     /*---*/
@@ -190,15 +190,21 @@ uint8_t Iso15765Task(Iso15765Handle_Type *hnd)
             hnd->State.Next = ST_ISO15765_RX_DONE;
             Iso15765UsrLog("ST_ISO15765_RX_CONSECUTIVE -> ST_ISO15765_RX_DONE...");
           }
-          else if((hnd->Request.BlockSize != 0) && (hnd->Request.BlockCnt >= hnd->Request.BlockSize))
-          {
-            hnd->Request.BlockCnt++;
-            hnd->State.Next = ST_ISO15765_TX_FLOWCTRL;
-            Iso15765UsrLog("ST_ISO15765_RX_CONSECUTIVE -> ST_ISO15765_TX_FLOWCTRL...");
-          }
           else
           {
-            Iso15765UsrLog("ST_ISO15765_RX_CONSECUTIVE -> ST_ISO15765_RX_CONSECUTIVE...");
+            if((hnd->Request.BlockSize != 0) && (hnd->Request.BlockCnt < hnd->Request.BlockSize))
+            {
+              hnd->Request.BlockCnt++;
+            }
+            if((hnd->Request.BlockSize != 0) && (hnd->Request.BlockCnt >= hnd->Request.BlockSize))
+            {
+              hnd->State.Next = ST_ISO15765_TX_FLOWCTRL;
+              Iso15765UsrLog("ST_ISO15765_RX_CONSECUTIVE -> ST_ISO15765_TX_FLOWCTRL...");
+            }
+            else
+            {
+              Iso15765UsrLog("ST_ISO15765_RX_CONSECUTIVE -> ST_ISO15765_RX_CONSECUTIVE...");
+            }
           }
         }
       }

@@ -270,12 +270,18 @@ uint8_t Iso15765ReqRespCallback(Iso15765Handle_Type *hnd, uint8_t *data, size_t 
         {
           break;
         }
-
+        /*Master x 500cTracebilityFVT 0xF18C*/
+        case  0xF187:
+        {
+        /*
+          data[0] = UDS_SID_WDBI + 0x40;
+          Iso15765Response(hnd, data, 1);
+        */
+          break;
+        }
       }
-      //default:
-      //{
-      //  Iso15765NegativeResponse(hnd, sid, ISO15765_NRC_CONDITIONS_NOT_CORRECT);
-      //}
+
+
       data[0] = UDS_SID_WDBI + 0x40;
       Iso15765Response(hnd, data, size);
       break;
@@ -372,7 +378,7 @@ int main(void)
   /*** Counter ***/
   Device.Counter = 0;
 
-  Iso15765ServerInit(&Device.Transport, 0, 30);
+  Iso15765ServerInit(&Device.Transport, ISO15765_SERVER_BLOCK_SIZE, ISO15765_SERVER_STMIN);
 
   /* USER CODE END 2 */
  

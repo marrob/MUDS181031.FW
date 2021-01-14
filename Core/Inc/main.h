@@ -46,6 +46,8 @@ extern "C" {
   #define DEVICE_DEBUG_LEVEL    3
 
 /**BMS1**/
+#define ISO15765_SERVER_BLOCK_SIZE 0x01
+#define ISO15765_SERVER_STMIN      0x00
 #define UDS_TX_ADDR 0x18DAF1DB  /*server -> client*/
 #define UDS_RX_ADDR 0x18DADBF1
 
