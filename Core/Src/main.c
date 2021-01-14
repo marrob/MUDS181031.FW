@@ -73,6 +73,7 @@ typedef struct _AppTypeDef
   int Counter;
   StateTypeDef States;
   Iso15765Handle_Type   Transport;
+  Iso15765Handle_Type   Bms2Transport;
 }DeviceTypeDef;
 /* USER CODE END PTD */
 
